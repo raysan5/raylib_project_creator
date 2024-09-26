@@ -22,7 +22,6 @@ jobs:
       PROJECT_NAME: ${{ github.event.repository.name }}
       PROJECT_BUILD_PATH: ${{ github.event.repository.name }}/src
       PROJECT_RELEASE_PATH: ${{ github.event.repository.name }}_dev_macos
-      PROJECT_SOURCES: "project_name.c"
       PROJECT_CUSTOM_FLAGS: ""
     
     steps:

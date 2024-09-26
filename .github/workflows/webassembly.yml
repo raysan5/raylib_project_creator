@@ -8,16 +8,20 @@ on:
       - '.github/workflows/webassembly.yml'
   release:
     types: [published]
+    
+permissions:
+  contents: read
 
 jobs:
   build:
+    permissions:
+      contents: write       # for actions/upload-release-asset to upload release asset
     runs-on: windows-latest
     
     env:
       PROJECT_NAME: ${{ github.event.repository.name }}
       PROJECT_BUILD_PATH: ${{ github.event.repository.name }}\\src
       PROJECT_RELEASE_PATH: ${{ github.event.repository.name }}_dev_wasm
-      BUILD_WEB_SHELL: minshell.html
       
     steps:
     - name: Checkout this repo
