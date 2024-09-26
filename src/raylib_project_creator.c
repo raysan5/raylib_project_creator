@@ -18,7 +18,7 @@
 *           NOTE: Avoids including tinyfiledialogs depencency library
 *
 *   VERSIONS HISTORY:
-*       1.0  (24-Sep-2024)  First release
+*       1.0  (26-Sep-2024)  First release
 *
 *   DEPENDENCIES:
 *       raylib 5.5-dev          - Windowing/input management and drawing
@@ -670,7 +670,7 @@ int main(int argc, char *argv[])
                     {
                         infoMessage = "Provided raylib source path does not included raylib.h!";
                         showInfoMessagePanel = true;
-                        strcpy(config->building.compilerPath, inFileName);
+                        strcpy(config->building.raylibSrcPath, inFileName);
                     }
                 }
 
