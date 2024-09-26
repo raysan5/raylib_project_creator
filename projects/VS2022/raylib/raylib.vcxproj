@@ -159,7 +159,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions);GRAPHICS_API_OPENGL_33;PLATFORM_DESKTOP</PreprocessorDefinitions>
       <CompileAs>CompileAsC</CompileAs>
-      <AdditionalIncludeDirectories>C:\GitHub\raylib\src\external\glfw\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\raylib\src\external\glfw\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -176,7 +176,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions);GRAPHICS_API_OPENGL_33;PLATFORM_DESKTOP</PreprocessorDefinitions>
       <CompileAs>CompileAsC</CompileAs>
-      <AdditionalIncludeDirectories>C:\GitHub\raylib\src\external\glfw\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\raylib\src\external\glfw\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -193,7 +193,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions);GRAPHICS_API_OPENGL_33;PLATFORM_DESKTOP;BUILD_LIBTYPE_SHARED</PreprocessorDefinitions>
       <CompileAs>CompileAsC</CompileAs>
-      <AdditionalIncludeDirectories>C:\GitHub\raylib\src\external\glfw\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\raylib\src\external\glfw\include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -212,7 +212,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions);GRAPHICS_API_OPENGL_33;PLATFORM_DESKTOP;BUILD_LIBTYPE_SHARED</PreprocessorDefinitions>
       <CompileAs>CompileAsC</CompileAs>
-      <AdditionalIncludeDirectories>C:\GitHub\raylib\src\external\glfw\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\raylib\src\external\glfw\include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -232,7 +232,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions);GRAPHICS_API_OPENGL_33;PLATFORM_DESKTOP</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\GitHub\raylib\src\external\glfw\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\raylib\src\external\glfw\include</AdditionalIncludeDirectories>
       <CompileAs>CompileAsC</CompileAs>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
@@ -251,7 +251,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions);GRAPHICS_API_OPENGL_33;PLATFORM_DESKTOP</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\GitHub\raylib\src\external\glfw\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\raylib\src\external\glfw\include</AdditionalIncludeDirectories>
       <CompileAs>CompileAsC</CompileAs>
       <DebugInformationFormat />
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -271,7 +271,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions);GRAPHICS_API_OPENGL_33;PLATFORM_DESKTOP;BUILD_LIBTYPE_SHARED</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\GitHub\raylib\src\external\glfw\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\raylib\src\external\glfw\include</AdditionalIncludeDirectories>
       <CompileAs>CompileAsC</CompileAs>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
@@ -291,7 +291,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions);GRAPHICS_API_OPENGL_33;PLATFORM_DESKTOP;BUILD_LIBTYPE_SHARED</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\GitHub\raylib\src\external\glfw\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\raylib\src\external\glfw\include</AdditionalIncludeDirectories>
       <CompileAs>CompileAsC</CompileAs>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <DebugInformationFormat />
@@ -304,34 +304,34 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="C:\GitHub\raylib\src\raudio.c" />
-    <ClCompile Include="C:\GitHub\raylib\src\rcore.c" />
-    <ClCompile Include="C:\GitHub\raylib\src\rmodels.c" />
-    <ClCompile Include="C:\GitHub\raylib\src\rglfw.c" />
-    <ClCompile Include="C:\GitHub\raylib\src\rshapes.c" />
-    <ClCompile Include="C:\GitHub\raylib\src\rtext.c" />
-    <ClCompile Include="C:\GitHub\raylib\src\rtextures.c" />
-    <ClCompile Include="C:\GitHub\raylib\src\utils.c" />
+    <ClCompile Include="..\..\..\..\raylib\src\raudio.c" />
+    <ClCompile Include="..\..\..\..\raylib\src\rcore.c" />
+    <ClCompile Include="..\..\..\..\raylib\src\rmodels.c" />
+    <ClCompile Include="..\..\..\..\raylib\src\rglfw.c" />
+    <ClCompile Include="..\..\..\..\raylib\src\rshapes.c" />
+    <ClCompile Include="..\..\..\..\raylib\src\rtext.c" />
+    <ClCompile Include="..\..\..\..\raylib\src\rtextures.c" />
+    <ClCompile Include="..\..\..\..\raylib\src\utils.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="C:\GitHub\raylib\src\config.h" />
-    <ClInclude Include="C:\GitHub\raylib\src\rgestures.h" />
-    <ClInclude Include="C:\GitHub\raylib\src\raylib.h" />
-    <ClInclude Include="C:\GitHub\raylib\src\raymath.h" />
-    <ClInclude Include="C:\GitHub\raylib\src\rlgl.h" />
-    <ClInclude Include="C:\GitHub\raylib\src\utils.h" />
-    <ClInclude Include="C:\GitHub\raylib\src\rcamera.h" />
-    <ClInclude Include="C:\GitHub\raylib\src\external\glad.h" />
-    <ClInclude Include="C:\GitHub\raylib\src\external\jar_mod.h" />
-    <ClInclude Include="C:\GitHub\raylib\src\external\jar_xm.h" />
-    <ClInclude Include="C:\GitHub\raylib\src\external\miniaudio.h" />
-    <ClInclude Include="C:\GitHub\raylib\src\external\stb_image.h" />
-    <ClInclude Include="C:\GitHub\raylib\src\external\stb_image_resize.h" />
-    <ClInclude Include="C:\GitHub\raylib\src\external\stb_image_write.h" />
-    <ClInclude Include="C:\GitHub\raylib\src\external\stb_rect_pack.h" />
-    <ClInclude Include="C:\GitHub\raylib\src\external\stb_truetype.h" />
-    <ClInclude Include="C:\GitHub\raylib\src\external\stb_vorbis.h" />
-    <ClInclude Include="C:\GitHub\raylib\src\external\cgltf.h" />
+    <ClInclude Include="..\..\..\..\raylib\src\config.h" />
+    <ClInclude Include="..\..\..\..\raylib\src\rgestures.h" />
+    <ClInclude Include="..\..\..\..\raylib\src\raylib.h" />
+    <ClInclude Include="..\..\..\..\raylib\src\raymath.h" />
+    <ClInclude Include="..\..\..\..\raylib\src\rlgl.h" />
+    <ClInclude Include="..\..\..\..\raylib\src\utils.h" />
+    <ClInclude Include="..\..\..\..\raylib\src\rcamera.h" />
+    <ClInclude Include="..\..\..\..\raylib\src\external\glad.h" />
+    <ClInclude Include="..\..\..\..\raylib\src\external\jar_mod.h" />
+    <ClInclude Include="..\..\..\..\raylib\src\external\jar_xm.h" />
+    <ClInclude Include="..\..\..\..\raylib\src\external\miniaudio.h" />
+    <ClInclude Include="..\..\..\..\raylib\src\external\stb_image.h" />
+    <ClInclude Include="..\..\..\..\raylib\src\external\stb_image_resize.h" />
+    <ClInclude Include="..\..\..\..\raylib\src\external\stb_image_write.h" />
+    <ClInclude Include="..\..\..\..\raylib\src\external\stb_rect_pack.h" />
+    <ClInclude Include="..\..\..\..\raylib\src\external\stb_truetype.h" />
+    <ClInclude Include="..\..\..\..\raylib\src\external\stb_vorbis.h" />
+    <ClInclude Include="..\..\..\..\raylib\src\external\cgltf.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
