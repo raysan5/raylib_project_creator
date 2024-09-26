@@ -47,8 +47,8 @@ jobs:
       run: | 
         mkdir ${{ env.PROJECT_RELEASE_PATH }}
         cd ${{ env.PROJECT_RELEASE_PATH }}
-        mkdir ${{ env.PROJECT_FILE_NAME }}.app
-        cd ${{ env.PROJECT_FILE_NAME }}.app
+        mkdir ${{ env.PROJECT_NAME }}.app
+        cd ${{ env.PROJECT_NAME }}.app
         mkdir Contents
         cd Contents
         mkdir MacOS
