@@ -1,0 +1,67 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build debug",
+            "type": "process",
+            "command": "make",
+            "args": [
+                "PLATFORM=PLATFORM_DESKTOP",
+                "BUILD_MODE=DEBUG",
+                "PROJECT_NAME=project_name",
+                "OBJS=project_name.c"
+            ],
+            "windows": {
+                "command": "mingw32-make.exe",
+                "args": [
+                    "-f ../../src/Makefile",
+                    "RAYLIB_SRC_PATH=C:/raylib/raylib",
+                    "PROJECT_NAME=project_name",
+                    "OBJS=project_name.c",
+                    "BUILD_MODE=DEBUG"
+                ],
+            },
+            "osx": {
+                "args": [
+                    "RAYLIB_SRC_PATH=C:/raylib/raylib",
+                    "PROJECT_NAME=project_name",
+                    "OBJS=project_name.c",
+                    "BUILD_MODE=DEBUG"
+                ],
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+        },
+        {
+            "label": "build release",
+            "type": "process",
+            "command": "make",
+            "args": [
+                "PLATFORM=PLATFORM_DESKTOP",
+                "PROJECT_NAME=project_name",
+                "OBJS=project_name.c"
+            ],
+            "windows": {
+                "command": "mingw32-make.exe",
+                "args": [
+                    "-f ../../src/Makefile",
+                    "RAYLIB_SRC_PATH=C:/raylib/raylib/src",
+                    "PROJECT_NAME=project_name",
+                    "OBJS=project_name.c"
+                ],
+            },
+            "osx": {
+                "args": [
+                    "RAYLIB_SRC_PATH=C:/raylib/raylib/src",
+                    "PROJECT_NAME=project_name",
+                    "OBJS=project_name.c"
+                ],
+            },
+            "group": "build",
+        }
+    ]
+}
