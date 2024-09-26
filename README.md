@@ -1,3 +1,5 @@
+![raylib project creator](screenshot/rpc_shot01.png)
+
 ## `raylib project creator`
 
 Welcome to `raylib project creator`! The new tool to help you setup professional raylib projects!
