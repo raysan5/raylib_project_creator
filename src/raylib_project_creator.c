@@ -605,7 +605,7 @@ int main(int argc, char *argv[])
 #if defined(CUSTOM_MODAL_DIALOGS)
                 int result = GuiFileDialog(DIALOG_MESSAGE, "Load source file(s)...", inFileName, "Ok", "Just drag and drop your code file(s)!");
 #else
-                int result = GuiFileDialog(DIALOG_OPEN_FILE_MULTI, "Load source file(s)...", multiFileNames, "*.c,*.h", "Code Files (*.c,*.h)");
+                int result = GuiFileDialog(DIALOG_OPEN_FILE_MULTI, "Load source file(s)...", multiFileNames, "*.c;*.h", "Code Files (*.c,*.h)");
 #endif
                 if (result == 1)
                 {
