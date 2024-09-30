@@ -987,7 +987,8 @@ static void SetupProject(ProjectConfig *config)
     // Get template directory
     // TODO: Use embedded template into executable?
     char templatePath[256] = { 0 };
-    strcpy(templatePath, TextFormat("%s/template", GetApplicationDirectory()));
+    //strcpy(templatePath, TextFormat("%s/template", GetApplicationDirectory()));
+    strcpy(templatePath, "./template"); // NOTE: Template directory should be in same directory as application, usually working directory
 
     // Remove spaces from directories/files names
     char outProjectName[256] = { 0 };
@@ -1127,7 +1128,7 @@ static void SetupProject(ProjectConfig *config)
     if (config->project.type == 0) // Using basic template (one file)
     {
         fileTextUpdated[0] = TextReplace(fileText, "project_name.c", TextFormat("%s.c", TextToLower(config->project.name)));
-        fileTextUpdated[1] = TextReplace(fileTextUpdated[0], "", "");
+        fileTextUpdated[1] = TextReplace(fileTextUpdated[0], "project_name", "project_name"); // WARNING: Only used to force a second buffer usage!
     }
     else if (config->project.type == 1) // Using advance template (multiple files)
     {
