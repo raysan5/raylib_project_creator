@@ -349,10 +349,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <!--Additional Include Items-->
-    <ClInclude Include="..\..\..\src\external\raygui.h" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="..\..\..\src\project_name.c" />
     <!--Additional Compile Items-->
     <!--<ClCompile Include="..\..\..\src\extra_module.c" />-->
