@@ -175,6 +175,8 @@ static char **srcFileNameList = NULL;
 
 static float exportProjectProgress = 0.0f;
 
+static bool screenSizeDouble = false; // Scale screen x2 (useful for HighDPI/4K screens)
+
 //------------------------------------------------------------------------------------
 // Program main entry point
 //------------------------------------------------------------------------------------
@@ -273,6 +275,26 @@ int main(int argc, char *argv[])
 
     InitWindow(screenWidth, screenHeight, "raylib project creator");
     SetExitKey(0);
+    
+    RenderTexture2D screenTarget = LoadRenderTexture(screenWidth, screenHeight);
+    SetTextureFilter(screenTarget.texture, TEXTURE_FILTER_POINT);
+    
+#if !defined(PLATFORM_WEB)
+    int monitorWidth = GetMonitorWidth(GetCurrentMonitor());
+    int monitorHeight = GetMonitorHeight(GetCurrentMonitor());
+    if ((GetWindowScaleDPI().x > 1.0f) || (monitorWidth > (screenWidth*2)))
+    {
+        // NOTE: We need to consider app window title bar and possible OS bottom bar
+        if ((monitorHeight - 24 - 40)  > (screenHeight*2)) 
+        {
+            screenSizeDouble = true;
+            SetWindowSize(screenWidth*2, screenHeight*2);
+            SetMouseScale(0.5f, 0.5f);
+            
+            SetWindowPosition(monitorWidth/2 - screenWidth, monitorHeight/2 - screenHeight);
+        }
+    }
+#endif
     
     // Initialize project config default
     ProjectConfig *config = (ProjectConfig *)RL_CALLOC(1, sizeof(ProjectConfig));
@@ -402,6 +424,34 @@ int main(int argc, char *argv[])
         
         // Basic program flow logic
         //----------------------------------------------------------------------------------
+#if !defined(PLATFORM_WEB)
+        // Window scale logic to support 4K/HighDPI monitors
+        if (IsKeyPressed(KEY_F10))
+        {
+            screenSizeDouble = !screenSizeDouble;
+            if (screenSizeDouble)
+            {
+                // Screen size x2
+                if (GetScreenWidth() < screenWidth*2)
+                {
+                    SetWindowSize(screenWidth*2, screenHeight*2);
+                    SetMouseScale(0.5f, 0.5f);
+                    SetWindowPosition(monitorWidth/2 - screenWidth, monitorHeight/2 - screenHeight);
+                }
+            }
+            else
+            {
+                // Screen size x1
+                if (screenWidth*2 >= GetScreenWidth())
+                {
+                    SetWindowSize(screenWidth, screenHeight);
+                    SetMouseScale(1.0f, 1.0f);
+                    SetWindowPosition(monitorWidth/2 - screenWidth/2, monitorHeight/2 - screenHeight/2);
+                }
+            }
+        }
+#endif
+
         if (showExitWindow ||
             showInfoMessagePanel ||
             showLoadSourceFilesDialog ||
@@ -417,8 +467,9 @@ int main(int argc, char *argv[])
 
         // Draw
         //----------------------------------------------------------------------------------
-        BeginDrawing();
-            ClearBackground(GetColor(GuiGetStyle(DEFAULT, BACKGROUND_COLOR))); 
+        // Render all screen to texture (for scaling)
+        BeginTextureMode(screenTarget);
+            ClearBackground(GetColor(GuiGetStyle(DEFAULT, BACKGROUND_COLOR)));
 
             // GUI: Main Window
             //----------------------------------------------------------------------------------
@@ -487,8 +538,14 @@ int main(int argc, char *argv[])
 #endif
             if (GuiButton((Rectangle){ anchorBuilding.x + 656, anchorBuilding.y + 16, 120, 24 }, "Browse")) showLoadRaylibSourcePathDialog = true;
             GuiEnable();
+
+#if !defined(PLATFORM_WEB) && (defined(__linux__) || defined(__FreeBSD__))
+            GuiDisable()
+#endif
             GuiLabel((Rectangle){ anchorBuilding.x + 8, anchorBuilding.y + 48, 104, 24 }, "COMPILER PATH:");
             if (GuiTextBox((Rectangle){ anchorBuilding.x + 112, anchorBuilding.y + 48, 536, 24 }, config->building.compilerPath, 128, buildingCompilerPathEditMode)) buildingCompilerPathEditMode = !buildingCompilerPathEditMode;
+            GuiEnable();
+            
 #if defined(PLATFORM_WEB)
             GuiDisable();
 #endif
@@ -520,10 +577,10 @@ int main(int argc, char *argv[])
             }
             GuiEnable();
 
-            if (!lockBackground && CheckCollisionPointRec(GetMousePosition(), (Rectangle){ 0, GetScreenHeight() - 32, GetScreenWidth(), 32 })) SetMouseCursor(MOUSE_CURSOR_POINTING_HAND);
+            if (!lockBackground && CheckCollisionPointRec(GetMousePosition(), (Rectangle){ 0, GetScreenHeight() - 32, screenWidth, 32 })) SetMouseCursor(MOUSE_CURSOR_POINTING_HAND);
             else SetMouseCursor(MOUSE_CURSOR_DEFAULT);
 
-            if (GuiButton((Rectangle){ 0, GetScreenHeight() - 32, GetScreenWidth(), 32 },
+            if (GuiButton((Rectangle){ 0, screenHeight - 32, screenWidth, 32 },
                 "Did you find this tool useful? Please, consider a donation! Thanks! <3"))
             {
                 OpenURL("https://github.com/sponsors/raysan5");
@@ -535,13 +592,13 @@ int main(int argc, char *argv[])
             //int textPadding = GuiGetStyle(STATUSBAR, TEXT_PADDING);
             //GuiSetStyle(STATUSBAR, TEXT_PADDING, 0);
             //GuiSetStyle(STATUSBAR, TEXT_ALIGNMENT, TEXT_ALIGN_CENTER);
-            //GuiStatusBar((Rectangle){ 0, screenHeight - 24, GetScreenWidth(), 24 }, "PROJECT INFO");
+            //GuiStatusBar((Rectangle){ 0, screenHeight - 24, screenWidth, 24 }, "PROJECT INFO");
             //GuiSetStyle(STATUSBAR, TEXT_ALIGNMENT, TEXT_ALIGN_LEFT);
             //GuiSetStyle(STATUSBAR, TEXT_PADDING, textPadding);
             //----------------------------------------------------------------------------------
 
             // NOTE: If some overlap window is open and main window is locked, we draw a background rectangle
-            if (lockBackground) DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), Fade(GetColor(GuiGetStyle(DEFAULT, BACKGROUND_COLOR)), 0.85f));
+            if (lockBackground) DrawRectangle(0, 0, screenWidth, screenHeight, Fade(GetColor(GuiGetStyle(DEFAULT, BACKGROUND_COLOR)), 0.85f));
 
             // WARNING: Before drawing the windows, we unlock them
             GuiUnlock();
@@ -551,18 +608,18 @@ int main(int argc, char *argv[])
             if (showInfoMessagePanel)
             {
                 Vector2 textSize = MeasureTextEx(GuiGetFont(), infoMessage, GuiGetFont().baseSize*2, 3);
-                GuiPanel((Rectangle){ -10, GetScreenHeight()/2 - 180, GetScreenWidth() + 20, 290 }, NULL);
+                GuiPanel((Rectangle){ -10, screenHeight/2 - 180, screenWidth + 20, 290 }, NULL);
 
                 GuiSetStyle(DEFAULT, TEXT_SIZE, GuiGetFont().baseSize*3);
                 GuiSetStyle(DEFAULT, TEXT_SPACING, 3);
                 GuiSetStyle(LABEL, TEXT_ALIGNMENT, TEXT_ALIGN_CENTER);
                 GuiSetStyle(LABEL, TEXT_COLOR_NORMAL, GuiGetStyle(DEFAULT, TEXT_COLOR_FOCUSED));
-                GuiLabel((Rectangle){ -10, GetScreenHeight()/2 - 140, GetScreenWidth() + 20, 30 }, infoTitle);
+                GuiLabel((Rectangle){ -10, screenHeight/2 - 140, screenWidth + 20, 30 }, infoTitle);
                 GuiSetStyle(LABEL, TEXT_COLOR_NORMAL, GuiGetStyle(DEFAULT, TEXT_COLOR_NORMAL));
                 GuiSetStyle(DEFAULT, TEXT_SIZE, GuiGetFont().baseSize*2);
-                GuiLabel((Rectangle){ -10, GetScreenHeight()/2 - textSize.y - 30, GetScreenWidth() + 20, 30 }, infoMessage);
+                GuiLabel((Rectangle){ -10, screenHeight/2 - textSize.y - 30, screenWidth + 20, 30 }, infoMessage);
 
-                if (GuiButton((Rectangle){ GetScreenWidth()/4, GetScreenHeight()/2 + 40, GetScreenWidth()/2, 40 }, infoButton)) 
+                if (GuiButton((Rectangle){ screenWidth/4, screenHeight/2 + 40, screenWidth/2, 40 }, infoButton)) 
                 {
                     showInfoMessagePanel = false;
                     
@@ -725,21 +782,21 @@ int main(int argc, char *argv[])
             //----------------------------------------------------------------------------------------
             if (showExportProjectProgress)
             {
-                GuiPanel((Rectangle){ -10, GetScreenHeight()/2 - 100, GetScreenWidth() + 20, 200 }, NULL);
+                GuiPanel((Rectangle){ -10, screenHeight/2 - 100, screenWidth + 20, 200 }, NULL);
 
                 GuiSetStyle(DEFAULT, TEXT_SIZE, GuiGetFont().baseSize*3);
                 GuiSetStyle(DEFAULT, TEXT_SPACING, 3);
                 GuiSetStyle(LABEL, TEXT_ALIGNMENT, TEXT_ALIGN_CENTER);
                 GuiSetStyle(LABEL, TEXT_COLOR_NORMAL, GuiGetStyle(DEFAULT, TEXT_COLOR_FOCUSED));
-                GuiLabel((Rectangle){ -10, GetScreenHeight()/2 - 60, GetScreenWidth() + 20, 30 }, ((int)exportProjectProgress >= 100)? "PROJECT GENERATED SUCCESSFULLY" : "GENERATING PROJECT...");
+                GuiLabel((Rectangle){ -10, screenHeight/2 - 60, screenWidth + 20, 30 }, ((int)exportProjectProgress >= 100)? "PROJECT GENERATED SUCCESSFULLY" : "GENERATING PROJECT...");
                 GuiSetStyle(LABEL, TEXT_COLOR_NORMAL, GuiGetStyle(DEFAULT, TEXT_COLOR_NORMAL));
                 GuiSetStyle(DEFAULT, TEXT_SIZE, GuiGetFont().baseSize*2);
                 
                 exportProjectProgress += 2.0f;
-                GuiProgressBar((Rectangle){ 12, GetScreenHeight()/2, GetScreenWidth() - 24, 20 }, NULL, NULL, &exportProjectProgress, 0, 100);
+                GuiProgressBar((Rectangle){ 12, screenHeight/2, screenWidth - 24, 20 }, NULL, NULL, &exportProjectProgress, 0, 100);
 
                 if (exportProjectProgress < 100.0f) GuiDisable();
-                if (GuiButton((Rectangle){ GetScreenWidth()/4, GetScreenHeight()/2 + 40, GetScreenWidth()/2, 40 }, "GREAT!")) 
+                if (GuiButton((Rectangle){ screenWidth/4, screenHeight/2 + 40, screenWidth/2, 40 }, "GREAT!")) 
                 {
                     showExportProjectProgress = false;
                 }
@@ -792,7 +849,14 @@ int main(int argc, char *argv[])
                 }
             }
             //----------------------------------------------------------------------------------------
+        EndTextureMode();
 
+        BeginDrawing();
+            ClearBackground(GetColor(GuiGetStyle(DEFAULT, BACKGROUND_COLOR)));
+
+            // Draw render texture to screen
+            if (screenSizeDouble) DrawTexturePro(screenTarget.texture, (Rectangle){ 0, 0, (float)screenTarget.texture.width, -(float)screenTarget.texture.height }, (Rectangle){ 0, 0, (float)screenTarget.texture.width*2, (float)screenTarget.texture.height*2 }, (Vector2){ 0, 0 }, 0.0f, WHITE);
+            else DrawTextureRec(screenTarget.texture, (Rectangle){ 0, 0, (float)screenTarget.texture.width, -(float)screenTarget.texture.height }, (Vector2){ 0, 0 }, WHITE);
         EndDrawing();
         //----------------------------------------------------------------------------------
     }
