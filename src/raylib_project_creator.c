@@ -540,7 +540,7 @@ int main(int argc, char *argv[])
             GuiEnable();
 
 #if !defined(PLATFORM_WEB) && (defined(__linux__) || defined(__FreeBSD__))
-            GuiDisable()
+            GuiDisable();
 #endif
             GuiLabel((Rectangle){ anchorBuilding.x + 8, anchorBuilding.y + 48, 104, 24 }, "COMPILER PATH:");
             if (GuiTextBox((Rectangle){ anchorBuilding.x + 112, anchorBuilding.y + 48, 536, 24 }, config->building.compilerPath, 128, buildingCompilerPathEditMode)) buildingCompilerPathEditMode = !buildingCompilerPathEditMode;
