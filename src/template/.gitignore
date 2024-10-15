@@ -60,5 +60,13 @@ dkms.conf
 *.aps
 .vs
 
+# Clangd LSP
+.cache
+compile_commands.json
+
 # Build folder
 [Bb]uild
+
+# Android
+*apk*
+android.*

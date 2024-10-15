@@ -9,7 +9,7 @@ BEGIN
 	//BLOCK "080904E4" 	// English UK
     BLOCK "040904E4"	// English US
     BEGIN
-	  VALUE "CompanyName", "ProjectDev"
+      VALUE "CompanyName", "ProjectDev"
       VALUE "FileDescription", "ProductName | ProjectDescription"
       VALUE "FileVersion", "1.0"
       VALUE "InternalName", "project_name"

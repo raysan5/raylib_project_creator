@@ -32,6 +32,8 @@
     
     <!-- Favicon -->
     <link rel="shortcut icon" href="https://developer_web/favicon.ico">
+
+    <!-- Web Style -->
     <style>
         body { 
           margin: 0px; 
@@ -52,7 +54,8 @@
     <script type='text/javascript'>
         function saveFileFromMEMFSToDisk(memoryFSname, localFSname)     // This can be called by C/C++ code
         {
-            var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+            var isSafari = false; // Not supported, navigator.userAgent access is being restricted
+            //var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
             var data = FS.readFile(memoryFSname);
             var blob;
 
@@ -83,7 +86,7 @@
                           element.scrollTop = element.scrollHeight; // focus on bottom
                         }
                     };
-                })(),            
+                })(),
                 canvas: (function() {
                     var canvas = document.getElementById('canvas');
                     return canvas;

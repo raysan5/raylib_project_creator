@@ -1,8 +1,8 @@
 #**************************************************************************************************
 #
-#   raylib makefile for Desktop platforms, Raspberry Pi and WebAssembly
+#   raylib makefile for Desktop platforms, Web (Wasm), Raspberry Pi (DRM mode) and Android
 #
-#   Copyright (c) 2021-2024 Ramon Santamaria (@raysan5)
+#   Copyright (c) 2013-2024 Ramon Santamaria (@raysan5)
 #
 #   This software is provided "as-is", without any express or implied warranty. In no event
 #   will the authors be held liable for any damages arising from the use of this software.
@@ -25,7 +25,7 @@
 
 # Define required environment variables
 #------------------------------------------------------------------------------------------------
-# Define target platform: PLATFORM_DESKTOP, PLATFORM_WEB, PLATFORM_DRM
+# Define target platform: PLATFORM_DESKTOP, PLATFORM_WEB, PLATFORM_DRM, PLATFORM_ANDROID
 PLATFORM              ?= PLATFORM_DESKTOP
 
 # Define project variables
@@ -34,6 +34,7 @@ PROJECT_VERSION       ?= 1.0
 PROJECT_BUILD_PATH    ?= .
 PROJECT_SOURCE_FILES  ?= project_name.c
 
+# raylib library variables
 RAYLIB_SRC_PATH       ?= C:/raylib/raylib/src
 RAYLIB_INCLUDE_PATH   ?= $(RAYLIB_SRC_PATH)
 RAYLIB_LIB_PATH       ?= $(RAYLIB_SRC_PATH)
@@ -92,14 +93,16 @@ ifeq ($(PLATFORM),PLATFORM_DRM)
     endif
 endif
 
-ifeq ($(PLATFORM),PLATFORM_WEB)
-    # Emscripten required variables
-    EMSDK_PATH         ?= C:/emsdk
-    EMSCRIPTEN_PATH    ?= $(EMSDK_PATH)/upstream/emscripten
-    CLANG_PATH          = $(EMSDK_PATH)/upstream/bin
-    PYTHON_PATH         = $(EMSDK_PATH)/python/3.9.2-1_64bit
-    NODE_PATH           = $(EMSDK_PATH)/node/14.18.2_64bit/bin
-    export PATH         = $(EMSDK_PATH);$(EMSCRIPTEN_PATH);$(CLANG_PATH);$(NODE_PATH);$(PYTHON_PATH):$$(PATH)
+ifeq ($(PLATFORM_OS),WINDOWS)
+    ifeq ($(PLATFORM),PLATFORM_WEB)
+        # Emscripten required variables
+        EMSDK_PATH         ?= C:/emsdk
+        EMSCRIPTEN_PATH    ?= $(EMSDK_PATH)/upstream/emscripten
+        CLANG_PATH          = $(EMSDK_PATH)/upstream/bin
+        PYTHON_PATH         = $(EMSDK_PATH)/python/3.9.2-1_64bit
+        NODE_PATH           = $(EMSDK_PATH)/node/14.18.2_64bit/bin
+        export PATH         = $(EMSDK_PATH);$(EMSCRIPTEN_PATH);$(CLANG_PATH);$(NODE_PATH);$(PYTHON_PATH):$$(PATH)
+    endif
 endif
 
 # Define default C compiler: CC
@@ -152,7 +155,7 @@ endif
 #  -Wno-missing-braces  ignore invalid warning (GCC bug 53119)
 #  -Wno-unused-value    ignore unused return values of some functions (i.e. fread())
 #  -D_DEFAULT_SOURCE    use with -std=c99 on Linux and PLATFORM_WEB, required for timespec
-CFLAGS = -Wall -std=c99 -D_DEFAULT_SOURCE -Wno-missing-braces -Wno-unused-value -Wno-pointer-sign $(PROJECT_CUSTOM_FLAGS)
+CFLAGS = -std=c99 -Wall -Wno-missing-braces -Wno-unused-value -Wno-pointer-sign -D_DEFAULT_SOURCE $(PROJECT_CUSTOM_FLAGS)
 #CFLAGS += -Wextra -Wmissing-prototypes -Wstrict-prototypes
 
 ifeq ($(BUILD_MODE),DEBUG)
@@ -178,7 +181,6 @@ endif
 
 # Define include paths for required headers: INCLUDE_PATHS
 #------------------------------------------------------------------------------------------------
-# NOTE: Several external required libraries (stb and others)
 INCLUDE_PATHS += -I. -Iexternal -I$(RAYLIB_INCLUDE_PATH)
 
 # Define additional directories containing required header files
@@ -314,9 +316,19 @@ OBJS = $(patsubst %.c, %.o, $(PROJECT_SOURCE_FILES))
 
 # Define processes to execute
 #------------------------------------------------------------------------------------------------
+# For Android platform we call a custom Makefile.Android
+ifeq ($(PLATFORM),PLATFORM_ANDROID)
+    MAKEFILE_TARGET = -f Makefile.Android
+    export PROJECT_NAME
+    export PROJECT_SOURCE_FILES
+else
+    MAKEFILE_TARGET = $(PROJECT_NAME)
+endif
+
 # Default target entry
+# NOTE: We call this Makefile target or Makefile.Android target
 all:
-	$(MAKE) $(PROJECT_NAME)
+	$(MAKE) $(MAKEFILE_TARGET)
 
 # Project target defined by PROJECT_NAME
 $(PROJECT_NAME): $(OBJS)

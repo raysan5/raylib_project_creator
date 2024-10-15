@@ -13,9 +13,9 @@ ProjectDescription
 ### Controls
 
 Keyboard/Mouse:
- - $(project Control 01)
- - $(project Control 02)
- - $(project Control 03)
+ - $(Project Controls 01)
+ - $(Project Controls 02)
+ - $(Project Controls 03)
 
 ### Screenshots
 
