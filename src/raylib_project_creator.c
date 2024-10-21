@@ -186,24 +186,24 @@ int main(int argc, char *argv[])
     // Attach template data into generated executable on first run
     int exeFileDataSize = 0;
     unsigned char *exeFileData = LoadFileData(argv[0], &exeFileDataSize);
-    
+
     // Check if template already added to not add it again
     char fourcc[5] = { 0 };
     memcpy(fourcc, exeFileData + exeFileDataSize - 4, 4);
-    
+
     if ((fourcc[0] != 'r') || (fourcc[1] != 'p') || (fourcc[2] != 'c') || (fourcc[3] != 'h'))
     {
         // No template data attached to exe, so we attach it
         int packDataSize = 0;
         char *packData = PackDirectoryData(TextFormat("%s/template", GetApplicationDirectory()), &packDataSize);
-        
+
         int outExeFileDataSize = exeFileDataSize + packDataSize;
         char *outExeFileData = (char *)RL_CALLOC(outExeFileDataSize, 1);
         memcpy(outExeFileData, exeFileData, exeFileDataSize);
         memcpy(outExeFileData + exeFileDataSize, packData, packDataSize);
-        
+
         SaveFileData(TextFormat("%s.template.exe", GetFileNameWithoutExt(argv[0])), outExeFileData, outExeFileDataSize);
-        
+
         RL_FREE(outExeFileData);
         RL_FREE(packData);
     }
@@ -224,7 +224,7 @@ int main(int argc, char *argv[])
             if (IsFileExtension(argv[1], ".c"))
             {
                 ProjectConfig *config = (ProjectConfig *)RL_CALLOC(1, sizeof(ProjectConfig));
-                
+
                 config->project.type = 2;  // Custom files
                 strcpy(config->project.name, GetFileNameWithoutExt(argv[1]));
                 strcpy(config->project.product, GetFileNameWithoutExt(argv[1]));
@@ -236,11 +236,11 @@ int main(int argc, char *argv[])
                 strcpy(config->building.compilerPath, "C:\\raylib\\w64devkit\\bin");
                 strcpy(config->building.raylibSrcPath, "C:\\raylib\\raylib\\src");
                 strcpy(config->building.outputPath, GetDirectoryPath(argv[1]));
-                
+
                 SetupProject(config);
-                
+
                 RL_FREE(config);
-                
+
                 return 0;
             }
         }
@@ -275,27 +275,27 @@ int main(int argc, char *argv[])
 
     InitWindow(screenWidth, screenHeight, "raylib project creator");
     SetExitKey(0);
-    
+
     RenderTexture2D screenTarget = LoadRenderTexture(screenWidth, screenHeight);
     SetTextureFilter(screenTarget.texture, TEXTURE_FILTER_POINT);
-    
+
 #if !defined(PLATFORM_WEB)
     int monitorWidth = GetMonitorWidth(GetCurrentMonitor());
     int monitorHeight = GetMonitorHeight(GetCurrentMonitor());
     if ((GetWindowScaleDPI().x > 1.0f) || (monitorWidth > (screenWidth*2)))
     {
         // NOTE: We need to consider app window title bar and possible OS bottom bar
-        if ((monitorHeight - 24 - 40)  > (screenHeight*2)) 
+        if ((monitorHeight - 24 - 40)  > (screenHeight*2))
         {
             screenSizeDouble = true;
             SetWindowSize(screenWidth*2, screenHeight*2);
             SetMouseScale(0.5f, 0.5f);
-            
+
             SetWindowPosition(monitorWidth/2 - screenWidth, monitorHeight/2 - screenHeight);
         }
     }
 #endif
-    
+
     // Initialize project config default
     ProjectConfig *config = (ProjectConfig *)RL_CALLOC(1, sizeof(ProjectConfig));
     config->project.type = 2;  // Custom files
@@ -309,16 +309,16 @@ int main(int argc, char *argv[])
     strcpy(config->building.compilerPath, "C:\\raylib\\w64devkit\\bin");
     strcpy(config->building.raylibSrcPath, "C:\\raylib\\raylib\\src");
     strcpy(config->building.outputPath, ".");
-    
+
     // Source file names (without path) are used for display on source textbox
     srcFileNameList = (char **)RL_CALLOC(256, sizeof(char *)); // Max number of input source files supported
     for (int i = 0; i < 256; i++) srcFileNameList[i] = (char *)RL_CALLOC(256, sizeof(char));
-    
+
     // GUI: Main Layout
     //-----------------------------------------------------------------------------------
     Vector2 anchorProject = { 8, 64 };
     Vector2 anchorBuilding = { 8, 258 };
-    
+
     bool projectNameEditMode = false;
     strcpy(config->project.name, "cool_project");
     bool productNameEditMode = false;
@@ -326,7 +326,7 @@ int main(int argc, char *argv[])
     bool projectDeveloperEditMode = false;
     strcpy(config->project.developer, "raylibtech");
     bool projectDeveloperWebEditMode = false;
-    strcpy(config->project.developerWeb, "www.raylibtech.com"); 
+    strcpy(config->project.developerWeb, "www.raylibtech.com");
     bool projectDescriptionEditMode = false;
     strcpy(config->project.description, "my cool new project");
     bool projectSourceFilePathEditMode = false;
@@ -334,12 +334,12 @@ int main(int argc, char *argv[])
     bool buildingRaylibPathEditMode = false;
     bool buildingCompilerPathEditMode = false;
     bool buildingOutputPathEditMode = false;
-    
+
     GuiLoadStyleAmber();    // Load UI style
- 
+
     GuiEnableTooltip();     // Enable tooltips by default
     //----------------------------------------------------------------------------------
-    
+
     // GUI: Exit Window
     //-----------------------------------------------------------------------------------
     bool closeWindow = false;
@@ -350,7 +350,7 @@ int main(int argc, char *argv[])
     infoMessage = "Provide some source code files (.c) to generate project!";// \nOr choose a default project type!";
     infoButton = "Sure! Let's start!";
     showInfoMessagePanel = true;
-    
+
     LOG("INIT: Ready to show project generation info...\n");
 
     SetTargetFPS(60);
@@ -368,7 +368,7 @@ int main(int argc, char *argv[])
         if (IsFileDropped())
         {
             FilePathList droppedFiles = LoadDroppedFiles();
-            
+
             for (int i = 0; i < droppedFiles.count; i++)
             {
                 if (IsFileExtension(droppedFiles.paths[i], ".c;.h"))
@@ -379,8 +379,8 @@ int main(int argc, char *argv[])
                     config->project.srcFileCount++;
                 }
             }
-            
-            if (IsFileExtension(droppedFiles.paths[0], ".rgs")) 
+
+            if (IsFileExtension(droppedFiles.paths[0], ".rgs"))
             {
                 // Reset to default internal style
                 // NOTE: Required to unload any previously loaded font texture
@@ -391,7 +391,7 @@ int main(int argc, char *argv[])
             UnloadDroppedFiles(droppedFiles);    // Unload filepaths from memory
         }
         //----------------------------------------------------------------------------------
-        
+
         // Keyboard shortcuts
         //------------------------------------------------------------------------------------
         // Show dialog: export project
@@ -421,7 +421,7 @@ int main(int argc, char *argv[])
         #endif
         }
         //----------------------------------------------------------------------------------
-        
+
         // Basic program flow logic
         //----------------------------------------------------------------------------------
 #if !defined(PLATFORM_WEB)
@@ -461,7 +461,7 @@ int main(int argc, char *argv[])
             showLoadOutputPathDialog ||
             showExportProjectProgress) lockBackground = true;
         else lockBackground = false;
-                
+
         if (lockBackground) GuiLock();
         //----------------------------------------------------------------------------------
 
@@ -478,7 +478,7 @@ int main(int argc, char *argv[])
             //GuiSetTooltip("Choose from a default project template or custom source files");
             GuiToggleGroup((Rectangle){ 120, 12, 223, 32 }, "Basic Sample;Screen Manager;Custom files", &config->project.type);
             GuiSetTooltip(NULL);
-            
+
             if (config->project.type != prevProjectType)
             {
                 if (config->project.type == 0)
@@ -502,7 +502,7 @@ int main(int argc, char *argv[])
                     config->project.srcFileCount = 0;
                 }
             }
-            
+
             GuiGroupBox((Rectangle){ anchorProject.x + 0, anchorProject.y + 0, 784, 172 }, "PROJECT SETTINGS");
             GuiLabel((Rectangle){ anchorProject.x + 8, anchorProject.y + 24, 104, 24 }, "PROJECT NAME:");
             //GuiSetTooltip("Define project name, note that every project\nblablablaballsadlksad");
@@ -515,13 +515,13 @@ int main(int argc, char *argv[])
             if (GuiTextBox((Rectangle){ anchorProject.x + 112, anchorProject.y + 88, 280, 24 }, config->project.developer, 128, projectDeveloperEditMode)) projectDeveloperEditMode = !projectDeveloperEditMode;
             GuiLabel((Rectangle){ anchorProject.x + 408, anchorProject.y + 88, 80, 24 }, "DEV. WEBPAGE:");
             if (GuiTextBox((Rectangle){ anchorProject.x + 496, anchorProject.y + 88, 280, 24 }, config->project.developerWeb, 128, projectDeveloperWebEditMode)) projectDeveloperWebEditMode = !projectDeveloperWebEditMode;
-            
+
             if (config->project.type != 2) GuiDisable();
             GuiLabel((Rectangle){ anchorProject.x + 8, anchorProject.y + 128, 104, 24 }, "SOURCE FILES:");
             GuiSetStyle(TEXTBOX, TEXT_READONLY, 1);
             GuiTextBox((Rectangle){ anchorProject.x + 112, anchorProject.y + 128, 536, 24 }, TextJoin(srcFileNameList, config->project.srcFileCount, ";"), 256, projectSourceFilePathEditMode);//) projectSourceFilePathEditMode = !projectSourceFilePathEditMode;
             GuiSetStyle(TEXTBOX, TEXT_READONLY, 0);
-            if (GuiButton((Rectangle){ anchorProject.x + 656, anchorProject.y + 128, 120, 24 }, "Browse")) showLoadSourceFilesDialog = true; 
+            if (GuiButton((Rectangle){ anchorProject.x + 656, anchorProject.y + 128, 120, 24 }, "Browse")) showLoadSourceFilesDialog = true;
             //GuiLabel((Rectangle){ anchorProject.x + 8, anchorProject.y + 160, 104, 24 }, "RESOURCE PATH:");
             //if (GuiTextBox((Rectangle){ anchorProject.x + 112, anchorProject.y + 160, 536, 24 }, config->project.resourcePath, 128, projectResourcePathEditMode)) projectResourcePathEditMode = !projectResourcePathEditMode;
 #if defined(PLATFORM_WEB)
@@ -529,7 +529,7 @@ int main(int argc, char *argv[])
 #endif
             //if (GuiButton((Rectangle){ anchorProject.x + 656, anchorProject.y + 160, 120, 24 }, "Browse")) showLoadResourcePathDialog = true;
             GuiEnable();
-            
+
             GuiGroupBox((Rectangle){ anchorBuilding.x + 0, anchorBuilding.y + 0, 784, 136 }, "BUILD SETTINGS");
             GuiLabel((Rectangle){ anchorBuilding.x + 8, anchorBuilding.y + 16, 104, 24 }, "raylib SRC PATH:");
             if (GuiTextBox((Rectangle){ anchorBuilding.x + 112, anchorBuilding.y + 16, 536, 24 }, config->building.raylibSrcPath, 128, buildingRaylibPathEditMode)) buildingRaylibPathEditMode = !buildingRaylibPathEditMode;
@@ -545,14 +545,14 @@ int main(int argc, char *argv[])
             GuiLabel((Rectangle){ anchorBuilding.x + 8, anchorBuilding.y + 48, 104, 24 }, "COMPILER PATH:");
             if (GuiTextBox((Rectangle){ anchorBuilding.x + 112, anchorBuilding.y + 48, 536, 24 }, config->building.compilerPath, 128, buildingCompilerPathEditMode)) buildingCompilerPathEditMode = !buildingCompilerPathEditMode;
             GuiEnable();
-            
+
 #if defined(PLATFORM_WEB)
             GuiDisable();
 #endif
             if (GuiButton((Rectangle){ anchorBuilding.x + 656, anchorBuilding.y + 48, 120, 24 }, "Browse")) showLoadCompilerPathDialog = true;
             GuiEnable();
             GuiLabel((Rectangle){ anchorBuilding.x + 8, anchorBuilding.y + 88, 104, 32 }, "BUILD SYSTEMS:");
-            
+
             if (!lockBackground) GuiLock();
             bool buildSystem = true;
             GuiToggle((Rectangle){ anchorBuilding.x + 112, anchorBuilding.y + 88, 164, 32 }, "Script", &buildSystem);
@@ -560,7 +560,7 @@ int main(int argc, char *argv[])
             GuiToggle((Rectangle){ anchorBuilding.x + 112 + 166*2, anchorBuilding.y + 88, 164, 32 }, "VSCode", &buildSystem);
             GuiToggle((Rectangle){ anchorBuilding.x + 112 + 166*3, anchorBuilding.y + 88, 164, 32 }, "VS2022", &buildSystem);
             if (!lockBackground) GuiUnlock();
-            
+
 #if defined(PLATFORM_WEB)
             GuiDisable();
 #endif
@@ -568,7 +568,7 @@ int main(int argc, char *argv[])
             if (GuiTextBox((Rectangle){ anchorBuilding.x + 112, anchorBuilding.y + 152, 536, 24 }, config->building.outputPath, 128, buildingOutputPathEditMode)) buildingOutputPathEditMode = !buildingOutputPathEditMode;
             if (GuiButton((Rectangle){ anchorBuilding.x + 656, anchorBuilding.y + 152, 120, 24 }, "Browse")) showLoadOutputPathDialog = true;
             GuiEnable();
-            
+
             if (config->project.srcFileCount == 0) GuiDisable();
             if (GuiButton((Rectangle){ 8, 450, 784, 40 }, "GENERATE PROJECT STRUCTURE"))
             {
@@ -586,7 +586,7 @@ int main(int argc, char *argv[])
                 OpenURL("https://github.com/sponsors/raysan5");
             }
             //----------------------------------------------------------------------------------
-            
+
             // GUI: Status bar
             //----------------------------------------------------------------------------------
             //int textPadding = GuiGetStyle(STATUSBAR, TEXT_PADDING);
@@ -602,7 +602,7 @@ int main(int argc, char *argv[])
 
             // WARNING: Before drawing the windows, we unlock them
             GuiUnlock();
-            
+
             // GUI: Show info message panel
             //----------------------------------------------------------------------------------------
             if (showInfoMessagePanel)
@@ -619,10 +619,10 @@ int main(int argc, char *argv[])
                 GuiSetStyle(DEFAULT, TEXT_SIZE, GuiGetFont().baseSize*2);
                 GuiLabel((Rectangle){ -10, screenHeight/2 - textSize.y - 30, screenWidth + 20, 30 }, infoMessage);
 
-                if (GuiButton((Rectangle){ screenWidth/4, screenHeight/2 + 40, screenWidth/2, 40 }, infoButton)) 
+                if (GuiButton((Rectangle){ screenWidth/4, screenHeight/2 + 40, screenWidth/2, 40 }, infoButton))
                 {
                     showInfoMessagePanel = false;
-                    
+
                     infoTitle = "WARNING! READ CAREFULLY!";
                     infoMessage = NULL;
                     infoButton = "I understand implications";
@@ -633,7 +633,7 @@ int main(int argc, char *argv[])
                 GuiSetStyle(DEFAULT, TEXT_SPACING, 1);
             }
             //----------------------------------------------------------------------------------------
-            
+
             // GUI: Exit Window
             //----------------------------------------------------------------------------------------
             if (showExitWindow)
@@ -677,7 +677,7 @@ int main(int argc, char *argv[])
                             strcpy(config->project.srcFilePaths[config->project.srcFileCount], multiFileList[i]);
                             strcpy(srcFileNameList[config->project.srcFileCount], GetFileName(multiFileList[i]));
                             config->project.srcFileCount++;
-                            
+
                             if (config->project.srcFileCount >= 256) break;
                         }
                     }
@@ -686,7 +686,7 @@ int main(int argc, char *argv[])
                 if (result >= 0) showLoadSourceFilesDialog = false;
             }
             //----------------------------------------------------------------------------------------
-            
+
             // GUI: Load Resource Path Dialog
             //----------------------------------------------------------------------------------------
             if (showLoadResourcePathDialog)
@@ -709,7 +709,7 @@ int main(int argc, char *argv[])
                 if (result >= 0) showLoadResourcePathDialog = false;
             }
             //----------------------------------------------------------------------------------------
-            
+
             // GUI: Load raylib Source Path Dialog
             //----------------------------------------------------------------------------------------
             if (showLoadRaylibSourcePathDialog)
@@ -734,7 +734,7 @@ int main(int argc, char *argv[])
                 if (result >= 0) showLoadRaylibSourcePathDialog = false;
             }
             //----------------------------------------------------------------------------------------
-            
+
             // GUI: Load Compiler Path Dialog
             //----------------------------------------------------------------------------------------
             if (showLoadCompilerPathDialog)
@@ -759,7 +759,7 @@ int main(int argc, char *argv[])
                 if (result >= 0) showLoadCompilerPathDialog = false;
             }
             //----------------------------------------------------------------------------------------
-            
+
             // GUI: Load Output Path Dialog
             //----------------------------------------------------------------------------------------
             if (showLoadOutputPathDialog)
@@ -791,12 +791,12 @@ int main(int argc, char *argv[])
                 GuiLabel((Rectangle){ -10, screenHeight/2 - 60, screenWidth + 20, 30 }, ((int)exportProjectProgress >= 100)? "PROJECT GENERATED SUCCESSFULLY" : "GENERATING PROJECT...");
                 GuiSetStyle(LABEL, TEXT_COLOR_NORMAL, GuiGetStyle(DEFAULT, TEXT_COLOR_NORMAL));
                 GuiSetStyle(DEFAULT, TEXT_SIZE, GuiGetFont().baseSize*2);
-                
+
                 exportProjectProgress += 2.0f;
                 GuiProgressBar((Rectangle){ 12, screenHeight/2, screenWidth - 24, 20 }, NULL, NULL, &exportProjectProgress, 0, 100);
 
                 if (exportProjectProgress < 100.0f) GuiDisable();
-                if (GuiButton((Rectangle){ screenWidth/4, screenHeight/2 + 40, screenWidth/2, 40 }, "GREAT!")) 
+                if (GuiButton((Rectangle){ screenWidth/4, screenHeight/2 + 40, screenWidth/2, 40 }, "GREAT!"))
                 {
                     showExportProjectProgress = false;
                 }
@@ -815,9 +815,9 @@ int main(int argc, char *argv[])
                     mz_zip_archive zip = { 0 };
                     mz_bool mz_ret = mz_zip_writer_init_file(&zip, TextFormat("%s.zip", outFileName), 0);
                     if (!mz_ret) LOG("WARNING: Could not initialize zip archive\n");
-                    
+
                     FilePathList files = LoadDirectoryFilesEx(outFileName, NULL, true);
-                    
+
                     // Add all template updated files to zip
                     for (int i = 0; i < files.count; i++)
                     {
@@ -834,7 +834,7 @@ int main(int argc, char *argv[])
 
                     mz_ret = mz_zip_writer_end(&zip);
                     if (!mz_ret) LOG("WARNING: Could not finalize zip writer\n");
-                    
+
                     UnloadDirectoryFiles(files);
 
                     char tempFileName[512] = { 0 };
@@ -864,7 +864,7 @@ int main(int argc, char *argv[])
     // De-Initialization
     //--------------------------------------------------------------------------------------
     RL_FREE(config);
-    
+
     CloseWindow();        // Close window and OpenGL context
     //--------------------------------------------------------------------------------------
 
@@ -919,7 +919,7 @@ static void ProcessCommandLine(int argc, char *argv[])
     bool showUsageInfo = false;         // Toggle command line usage info
 
     if (argc == 1) showUsageInfo = true;
-    
+
     ProjectConfig *config = (ProjectConfig *)RL_CALLOC(1, sizeof(ProjectConfig));
 
     // Process command line arguments
@@ -1018,7 +1018,7 @@ static void ProcessCommandLine(int argc, char *argv[])
 
     // Generate build projects
     SetupProject(config);
-    
+
     RL_FREE(config);
 
     if (showUsageInfo) ShowCommandLineInfo();
@@ -1047,7 +1047,7 @@ static void SetupProject(ProjectConfig *config)
 {
     char *fileText = NULL;
     char *fileTextUpdated[6] = { 0 };
-    
+
     // Get template directory
     // TODO: Use embedded template into executable?
     char templatePath[256] = { 0 };
@@ -1095,7 +1095,7 @@ static void SetupProject(ProjectConfig *config)
         fileText = LoadFileText(TextFormat("%s/src/screen_ending.c", templatePath));
         SaveFileText(TextFormat("%s/%s/src/screen_ending.c", config->building.outputPath, outProjectName), fileText);
         UnloadFileText(fileText);
-        
+
         LOG("INFO: Copied advance project with src/%s.c successfully\n", TextToLower(config->project.name));
     }
     else if (config->project.type == 2) // Use provided source files
@@ -1109,7 +1109,7 @@ static void SetupProject(ProjectConfig *config)
         }
     }
     //--------------------------------------------------------------------------
-    
+
     // Project build system: Script
     //-------------------------------------------------------------------------------------
     MakeDirectory(TextFormat("%s/%s/projects/scripts", config->building.outputPath, outProjectName));
@@ -1122,7 +1122,7 @@ static void SetupProject(ProjectConfig *config)
     SaveFileText(TextFormat("%s/%s/projects/scripts/build.bat", config->building.outputPath, outProjectName), fileTextUpdated[2]);
     for (int i = 0; i < 6; i++) { MemFree(fileTextUpdated[i]); fileTextUpdated[i] = NULL; }
     UnloadFileText(fileText);
-    
+
     LOG("INFO: Updated build system successfully: Script (src/build.bat)\n");
     //-------------------------------------------------------------------------------------
 
@@ -1143,7 +1143,7 @@ static void SetupProject(ProjectConfig *config)
     {
         char **srcFileNames = (char **)RL_CALLOC(256, sizeof(char *)); // Max number of input source files supported
         for (int i = 0; i < 256; i++) srcFileNames[i] = (char *)RL_CALLOC(256, sizeof(char));
-        
+
         int codeFileCount = 0;
         for (int j = 0; j < config->project.srcFileCount; j++)
         {
@@ -1153,9 +1153,9 @@ static void SetupProject(ProjectConfig *config)
                 codeFileCount++;
             }
         }
-        
+
         fileTextUpdated[0] = TextReplace(fileText, "project_name.c", TextJoin(srcFileNames, codeFileCount, " "));
-        
+
         for (int i = 0; i < 256; i++) RL_FREE(srcFileNames[i]);
         RL_FREE(srcFileNames);
     }
@@ -1163,10 +1163,10 @@ static void SetupProject(ProjectConfig *config)
     fileTextUpdated[2] = TextReplace(fileTextUpdated[0], "C:\\raylib\\w64devkit\\bin", config->building.compilerPath);
     fileTextUpdated[3] = TextReplace(fileTextUpdated[1], "C:/raylib/raylib/src", config->building.raylibSrcPath);
     SaveFileText(TextFormat("%s/%s/src/Makefile", config->building.outputPath, outProjectName), fileTextUpdated[3]);
-    
+
     for (int i = 0; i < 6; i++) { MemFree(fileTextUpdated[i]); fileTextUpdated[i] = NULL; }
     UnloadFileText(fileText);
-    
+
     LOG("INFO: Updated build system successfully: Makefile (src/Makefile)\n");
     //-------------------------------------------------------------------------------------
 
@@ -1196,8 +1196,8 @@ static void SetupProject(ProjectConfig *config)
     }
     else if (config->project.type == 1) // Using advance template (multiple files)
     {
-        fileTextUpdated[0] = TextReplace(fileText, "project_name.c", TextFormat("%s.c", TextToLower(config->project.name))); 
-        fileTextUpdated[1] = TextReplace(fileTextUpdated[0], "<!--Additional Compile Items-->", 
+        fileTextUpdated[0] = TextReplace(fileText, "project_name.c", TextFormat("%s.c", TextToLower(config->project.name)));
+        fileTextUpdated[1] = TextReplace(fileTextUpdated[0], "<!--Additional Compile Items-->",
         "<ClCompile Include=\"..\\..\\..\\src\\screen_logo.c\" />\n    \
          <ClCompile Include=\"..\\..\\..\\src\\screen_title.c\" />\n    \
          <ClCompile Include=\"..\\..\\..\\src\\screen_options.c\" />\n    \
@@ -1208,7 +1208,7 @@ static void SetupProject(ProjectConfig *config)
     {
         char **srcFileNames = (char **)RL_CALLOC(256, sizeof(char *)); // Max number of input source files supported
         for (int i = 0; i < 256; i++) srcFileNames[i] = (char *)RL_CALLOC(256, sizeof(char));
-        
+
         int codeFileCount = 0;
         for (int j = 0; j < config->project.srcFileCount; j++)
         {
@@ -1218,7 +1218,7 @@ static void SetupProject(ProjectConfig *config)
                 codeFileCount++;
             }
         }
-        
+
         fileTextUpdated[0] = TextReplace(fileText, "project_name.c", srcFileNames[0]);
         char srcFilesBlock[1024] = { 0 };
         int nextPosition = 0;
@@ -1226,9 +1226,9 @@ static void SetupProject(ProjectConfig *config)
         {
             TextAppend(srcFilesBlock, TextFormat("<ClCompile Include=\"..\\..\\..\\src\\%s\" />\n    ", srcFileNames[k]), &nextPosition);
         }
-        
+
         fileTextUpdated[1] = TextReplace(fileTextUpdated[0], "<!--Additional Compile Items-->", srcFilesBlock);
-        
+
         for (int i = 0; i < 256; i++) RL_FREE(srcFileNames[i]);
         RL_FREE(srcFileNames);
     }
@@ -1247,7 +1247,7 @@ static void SetupProject(ProjectConfig *config)
 
     LOG("INFO: Updated build system successfully: VS2022 (projects/VS2022)\n");
     //-------------------------------------------------------------------------------------
-    
+
     // Project build system: VSCode
     //-------------------------------------------------------------------------------------
     // Create required output directories
@@ -1259,7 +1259,7 @@ static void SetupProject(ProjectConfig *config)
     SaveFileText(TextFormat("%s/%s/projects/VSCode/.vscode/launch.json", config->building.outputPath, outProjectName), fileTextUpdated[1]);
     for (int i = 0; i < 6; i++) { MemFree(fileTextUpdated[i]); fileTextUpdated[i] = NULL; }
     UnloadFileText(fileText);
-    
+
     // Update projects/VSCode/.vscode/c_cpp_properties.json
     fileText = LoadFileText(TextFormat("%s/projects/VSCode/.vscode/c_cpp_properties.json", templatePath));
     fileTextUpdated[0] = TextReplace(fileText, "C:/raylib/raylib/src", config->building.raylibSrcPath);
@@ -1267,10 +1267,10 @@ static void SetupProject(ProjectConfig *config)
     SaveFileText(TextFormat("%s/%s/projects/VSCode/.vscode/c_cpp_properties.json", config->building.outputPath, outProjectName), fileTextUpdated[1]);
     for (int i = 0; i < 6; i++) { MemFree(fileTextUpdated[i]); fileTextUpdated[i] = NULL; }
     UnloadFileText(fileText);
-    
+
     // Update projects/VSCode/.vscode/tasks.json
     fileText = LoadFileText(TextFormat("%s/projects/VSCode/.vscode/tasks.json", templatePath));
-    
+
     // Update source code files
     if (config->project.type == 0) // Using basic template (one file)
     {
@@ -1284,7 +1284,7 @@ static void SetupProject(ProjectConfig *config)
     {
         char **srcFileNames = (char **)RL_CALLOC(256, sizeof(char *)); // Max number of input source files supported
         for (int i = 0; i < 256; i++) srcFileNames[i] = (char *)RL_CALLOC(256, sizeof(char));
-        
+
         int codeFileCount = 0;
         for (int j = 0; j < config->project.srcFileCount; j++)
         {
@@ -1294,9 +1294,9 @@ static void SetupProject(ProjectConfig *config)
                 codeFileCount++;
             }
         }
-        
+
         fileTextUpdated[0] = TextReplace(fileText, "project_name.c", TextJoin(srcFileNames, codeFileCount, " "));
-        
+
         for (int i = 0; i < 256; i++) RL_FREE(srcFileNames[i]);
         RL_FREE(srcFileNames);
     }
@@ -1304,29 +1304,29 @@ static void SetupProject(ProjectConfig *config)
     fileTextUpdated[1] = TextReplace(fileText, "project_name", TextToLower(config->project.name));
     fileTextUpdated[2] = TextReplace(fileTextUpdated[1], "C:/raylib/raylib/src", config->building.raylibSrcPath);
     fileTextUpdated[3] = TextReplace(fileTextUpdated[2], "C:/raylib/w64devkit/bin", config->building.compilerPath);
-    
+
     SaveFileText(TextFormat("%s/%s/projects/VSCode/.vscode/tasks.json", config->building.outputPath, outProjectName), fileTextUpdated[3]);
     for (int i = 0; i < 6; i++) { MemFree(fileTextUpdated[i]); fileTextUpdated[i] = NULL; }
     UnloadFileText(fileText);
-    
+
     // Copy projects/VSCode/.vscode/settings.json
     fileText = LoadFileText(TextFormat("%s/projects/VSCode/.vscode/settings.json", templatePath));
     SaveFileText(TextFormat("%s/%s/projects/VSCode/.vscode/settings.json", config->building.outputPath, outProjectName, outProjectName), fileText);
     UnloadFileText(fileText);
-    
+
     // Copy projects/VSCode/main.code-workspace
     fileText = LoadFileText(TextFormat("%s/projects/VSCode/main.code-workspace", templatePath));
     SaveFileText(TextFormat("%s/%s/projects/VSCode/main.code-workspace", config->building.outputPath, outProjectName, outProjectName), fileText);
     UnloadFileText(fileText);
-    
+
     // Copy projects/VSCode/README.md
     fileText = LoadFileText(TextFormat("%s/projects/VSCode/README.md", templatePath));
     SaveFileText(TextFormat("%s/%s/projects/VSCode/README.md", config->building.outputPath, outProjectName, outProjectName), fileText);
     UnloadFileText(fileText);
-    
+
     LOG("INFO: Updated build system successfully: VSCode (projects/VSCode)\n");
     //-------------------------------------------------------------------------------------
-    
+
     // Project build system: GitHub Actions
     // - Windows: Uses VS2022 project
     // - Linux, macOS, WebAssembly: Uses Makefile project
@@ -1347,7 +1347,7 @@ static void SetupProject(ProjectConfig *config)
     fileText = LoadFileText(TextFormat("%s/.github/workflows/webassembly.yml", templatePath));
     SaveFileText(TextFormat("%s/%s/.github/workflows/webassembly.yml", config->building.outputPath, outProjectName, outProjectName), fileText);
     UnloadFileText(fileText);
-    
+
     LOG("INFO: Updated build system successfully: GitHub Actions CI/CD workflows (.github)\n");
     //-------------------------------------------------------------------------------------
 
@@ -1431,7 +1431,7 @@ static void SetupProject(ProjectConfig *config)
     for (int i = 0; i < 6; i++) { MemFree(fileTextUpdated[i]); fileTextUpdated[i] = NULL; }
     UnloadFileText(fileText);
     LOG("INFO: Updated LICENSE successfully\n");
-    
+
     // Copy from template files that do not require customization: CONVENTIONS.md, .gitignore
     fileText = LoadFileText(TextFormat("%s/CONVENTIONS.md", templatePath));
     SaveFileText(TextFormat("%s/%s/CONVENTIONS.md", config->building.outputPath, outProjectName, outProjectName), fileText);
@@ -1447,41 +1447,41 @@ static void SetupProject(ProjectConfig *config)
 static char *PackDirectoryData(const char *baseDirPath, int *packSize)
 {
     #define MAX_PACKED_DATA_SIZE    10*1024*1024    // 10 MB
-    
+
     int fullPackSize = 0;
     char *data = NULL;
 
     FilePathList files = LoadDirectoryFilesEx(baseDirPath, NULL, true);
-    
+
     if (files.count > 0)
     {
         int filesDataSize = 0;
         data = (char *)RL_CALLOC(MAX_PACKED_DATA_SIZE, 1);
         PackFileEntry *entries = (PackFileEntry *)RL_CALLOC(files.count, sizeof(PackFileEntry));
-        
-        for (unsigned int i = 0; i < files.count; i++) 
+
+        for (unsigned int i = 0; i < files.count; i++)
         {
             strcpy(entries[i].filePath, files.paths[i]);
             unsigned char *fileData = LoadFileData(files.paths[i], &entries[i].fileSize);
             unsigned char *compFileData = CompressData(fileData, entries[i].fileSize, &entries[i].compFileSize);
             UnloadFileData(fileData);
-            
+
             printf("Packing file: %s\n", files.paths[i]);
 
             memcpy(data + filesDataSize, compFileData, entries[i].compFileSize);
             filesDataSize += entries[i].compFileSize;
             MemFree(compFileData);
         }
-        
+
         // OPTION: Compress entries data for optimization
         int compEntriesDataSize = 0;
         unsigned char *compEntriesData = CompressData((unsigned char *)entries, files.count*sizeof(PackFileEntry), &compEntriesDataSize);
-        
+
         // Append entries data + compEntriesDataSize + filesDataSize + files.count + CCFOUR (at the end of file)
         fullPackSize = filesDataSize;
         memcpy(data + fullPackSize, compEntriesData, compEntriesDataSize);
         fullPackSize += compEntriesDataSize;
-        
+
         memcpy(data + fullPackSize, &compEntriesDataSize, sizeof(int));
         fullPackSize += sizeof(int);
         memcpy(data + fullPackSize, &filesDataSize, sizeof(int));
@@ -1494,7 +1494,7 @@ static char *PackDirectoryData(const char *baseDirPath, int *packSize)
     }
 
     UnloadDirectoryFiles(files);
-    
+
     *packSize = fullPackSize;
     return data;
 }
@@ -1503,13 +1503,13 @@ static char *PackDirectoryData(const char *baseDirPath, int *packSize)
 static void UnpackDirectoryData(const char *outputDirPath, const unsigned char *data, int *dataSize, PackFileEntry *entries, int fileCount)
 {
     int nextFileDataOffset = 0;
-    
+
     for (int i = 0; i < fileCount; i++)
-    {    
+    {
         // Decompress entry from data
         int fileDataSize = 0;
         unsigned char *fileData = DecompressData(data + nextFileDataOffset, entries[i].compFileSize, &fileDataSize);
-        
+
         // Verify process worked as expected
         if ((fileData != NULL) && (fileDataSize == entries[i].fileSize))
         {
@@ -1520,7 +1520,7 @@ static void UnpackDirectoryData(const char *outputDirPath, const unsigned char *
             LOG("WARNING: File data could not be decompressed!\n");
             break;
         }
-        
+
         MemFree(fileData);
         nextFileDataOffset += entries[i].compFileSize;
     }
@@ -1531,15 +1531,15 @@ char *LoadFileTextPack(const char *fileName, const char *packData, PackFileEntry
 {
     int fileDataSize = 0;
     char *fileData = NULL;
-    
+
     // Find data offset in package and decompress it
     for (int i = 0, dataOffset = 0; i < fileCount; i++)
     {
         if (TextIsEqual(fileName, entries[i].filePath))
         {
             unsigned char *uncompFileData = DecompressData(packData + dataOffset, entries[i].compFileSize, &fileDataSize);
-            
-            if ((fileData != NULL) && (fileDataSize == entries[i].fileSize)) 
+
+            if ((fileData != NULL) && (fileDataSize == entries[i].fileSize))
             {
                 // NOTE: We make sure the text data ends with /0
                 fileData = (char *)RL_CALLOC(entries[i].fileSize + 1, 1);
@@ -1547,12 +1547,12 @@ char *LoadFileTextPack(const char *fileName, const char *packData, PackFileEntry
                 MemFree(uncompFileData);
             }
             else LOG("WARNING: File not loaded properly from pack\n");
-            
+
             break;
         }
         else dataOffset += entries[i].compFileSize;
     }
-    
+
     return fileData;
 }
 
