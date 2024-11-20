@@ -307,7 +307,7 @@ int main(int argc, char *argv[])
     //strcpy(config->project.srcFilePaths[0], argv[1]);
     //config->project.srcFileCount = 1;
     strcpy(config->building.compilerPath, "C:\\raylib\\w64devkit\\bin");
-    strcpy(config->building.raylibSrcPath, "C:\\raylib\\raylib\\src");
+    strcpy(config->building.raylibSrcPath, RAYLIB_SRC_PATH);
     strcpy(config->building.outputPath, ".");
 
     // Source file names (without path) are used for display on source textbox
