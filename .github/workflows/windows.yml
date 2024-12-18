@@ -21,8 +21,8 @@ jobs:
     env:
       REPOSITORY_NAME: ${{ github.event.repository.name }}
       PROJECT_NAME: raylib_project_creator
-      PROJECT_BUILD_PATH: "${{ github.event.repository.name }}\\projects\\VS2022\\build\\${{ github.event.repository.name }}\\bin\\x64\\Release"
-      PROJECT_RELEASE_PATH: ${{ github.event.repository.name }}_dev_win_x64
+      PROJECT_BUILD_PATH: "${{ github.event.repository.name }}\\projects\\VS2022\\build\\${{ PROJECT_NAME }}\\bin\\x64\\Release"
+      PROJECT_RELEASE_PATH: ${{ PROJECT_NAME }}_dev_win_x64
       PROJECT_RESOURCES_PATH: src\template
 
     steps:
