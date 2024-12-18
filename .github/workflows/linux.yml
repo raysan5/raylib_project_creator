@@ -19,7 +19,8 @@ jobs:
     runs-on: ubuntu-20.04
     
     env:
-      PROJECT_NAME: ${{ github.event.repository.name }}
+      REPOSITORY_NAME: ${{ github.event.repository.name }}
+      PROJECT_NAME: raylib_project_creator
       PROJECT_BUILD_PATH: ${{ github.event.repository.name }}/src
       PROJECT_RELEASE_PATH: ${{ github.event.repository.name }}_dev_linux_x64
       PROJECT_CUSTOM_FLAGS: ""
@@ -29,7 +30,7 @@ jobs:
     - name: Checkout this repo
       uses: actions/checkout@master
       with:
-        path: ${{ env.PROJECT_NAME }}
+        path: ${{ env.REPOSITORY_NAME }}
       
     - name: Checkout raylib repo
       uses: actions/checkout@v4
@@ -59,16 +60,16 @@ jobs:
 
     - name: Build Product
       run: |
-        cd ${{ env.PROJECT_NAME }}/src
+        cd ${{ env.REPOSITORY_NAME }}/src
         make PLATFORM=PLATFORM_DESKTOP BUILD_MODE=RELEASE PROJECT_CUSTOM_FLAGS=${{ env.PROJECT_CUSTOM_FLAGS }} PROJECT_BUILD_PATH=. RAYLIB_SRC_PATH=../../raylib/src
 
     - name: Generate Artifacts
       run: |
         ls ${{ env.PROJECT_BUILD_PATH }}
-        cp ${{ env.PROJECT_BUILD_PATH }}/${{ env.PROJECT_NAME }} ${{ env.PROJECT_RELEASE_PATH }}
-        cp -r ${{ env.PROJECT_NAME }}/${{ env.PROJECT_RESOURCES_PATH }} ${{ env.PROJECT_RELEASE_PATH }}
-        cp ${{ env.PROJECT_NAME }}/README.md ${{ env.PROJECT_RELEASE_PATH }}
-        cp ${{ env.PROJECT_NAME }}/LICENSE ${{ env.PROJECT_RELEASE_PATH }}
+        cp ${{ env.PROJECT_BUILD_PATH }}/${{ env.REPOSITORY_NAME }} ${{ env.PROJECT_RELEASE_PATH }}
+        cp -r ${{ env.REPOSITORY_NAME }}/${{ env.PROJECT_RESOURCES_PATH }} ${{ env.PROJECT_RELEASE_PATH }}
+        cp ${{ env.REPOSITORY_NAME }}/README.md ${{ env.PROJECT_RELEASE_PATH }}
+        cp ${{ env.REPOSITORY_NAME }}/LICENSE ${{ env.PROJECT_RELEASE_PATH }}
         ls ${{ env.PROJECT_RELEASE_PATH }}
         7z a ./${{ env.PROJECT_RELEASE_PATH }}.zip ./${{ env.PROJECT_RELEASE_PATH }}
 
