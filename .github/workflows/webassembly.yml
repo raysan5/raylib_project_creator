@@ -22,7 +22,7 @@ jobs:
       REPOSITORY_NAME: ${{ github.event.repository.name }}
       PROJECT_NAME: raylib_project_creator
       PROJECT_BUILD_PATH: ${{ github.event.repository.name }}\\src
-      PROJECT_RELEASE_PATH: ${{ PROJECT_NAME }}_dev_wasm
+      PROJECT_RELEASE_PATH: raylib_project_creator_dev_wasm
       
     steps:
     - name: Checkout this repo
