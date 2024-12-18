@@ -22,7 +22,7 @@ jobs:
       REPOSITORY_NAME: ${{ github.event.repository.name }}
       PROJECT_NAME: raylib_project_creator
       PROJECT_BUILD_PATH: ${{ github.event.repository.name }}/src
-      PROJECT_RELEASE_PATH: ${{ github.event.repository.name }}_dev_linux_x64
+      PROJECT_RELEASE_PATH: raylib_project_creator_dev_linux_x64
       PROJECT_CUSTOM_FLAGS: ""
       PROJECT_RESOURCES_PATH: src/template
     
