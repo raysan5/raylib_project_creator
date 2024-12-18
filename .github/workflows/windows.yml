@@ -19,7 +19,8 @@ jobs:
     runs-on: windows-latest
 
     env:
-      PROJECT_NAME: ${{ github.event.repository.name }}
+      REPOSITORY_NAME: ${{ github.event.repository.name }}
+      PROJECT_NAME: raylib_project_creator
       PROJECT_BUILD_PATH: "${{ github.event.repository.name }}\\projects\\VS2022\\build\\${{ github.event.repository.name }}\\bin\\x64\\Release"
       PROJECT_RELEASE_PATH: ${{ github.event.repository.name }}_dev_win_x64
       PROJECT_RESOURCES_PATH: src\template
@@ -28,7 +29,7 @@ jobs:
     - name: Checkout this repo
       uses: actions/checkout@master
       with:
-        path: ${{ env.PROJECT_NAME }}
+        path: ${{ env.REPOSITORY_NAME }}
       
     - name: Checkout raylib repo
       uses: actions/checkout@v4
@@ -57,7 +58,7 @@ jobs:
     - name: Build raylib Library + Product (VS2022 solution)
       run: |
         dir
-        cd ${{ env.PROJECT_NAME }}/projects/VS2022
+        cd ${{ env.REPOSITORY_NAME }}/projects/VS2022
         msbuild.exe ${{ env.PROJECT_NAME }}.sln /target:${{ env.PROJECT_NAME }} /property:Configuration=Release /property:Platform=x64 /property:RaylibSrcPath="..\..\..\..\raylib\src"
         cd ../..
       shell: cmd
@@ -67,8 +68,8 @@ jobs:
         dir ${{ env.PROJECT_BUILD_PATH }}
         copy /Y ${{ env.PROJECT_BUILD_PATH }}\${{ env.PROJECT_NAME }}.exe ${{ env.PROJECT_RELEASE_PATH }}\${{ env.PROJECT_NAME }}.exe
         xcopy ${{ env.PROJECT_NAME }}\${{ env.PROJECT_RESOURCES_PATH }} ${{ env.PROJECT_RELEASE_PATH }}\template /s /e /i
-        copy /Y ${{ env.PROJECT_NAME }}\README.md ${{ env.PROJECT_RELEASE_PATH }}\README.md
-        copy /Y ${{ env.PROJECT_NAME }}\LICENSE ${{ env.PROJECT_RELEASE_PATH }}\LICENSE
+        copy /Y ${{ env.REPOSITORY_NAME }}\README.md ${{ env.PROJECT_RELEASE_PATH }}\README.md
+        copy /Y ${{ env.REPOSITORY_NAME }}\LICENSE ${{ env.PROJECT_RELEASE_PATH }}\LICENSE
         dir ${{ env.PROJECT_RELEASE_PATH }}
         7z a .\${{ env.PROJECT_RELEASE_PATH }}.zip .\${{ env.PROJECT_RELEASE_PATH }}
       shell: cmd
