@@ -19,15 +19,16 @@ jobs:
     runs-on: windows-latest
     
     env:
-      PROJECT_NAME: ${{ github.event.repository.name }}
+      REPOSITORY_NAME: ${{ github.event.repository.name }}
+      PROJECT_NAME: raylib_project_creator
       PROJECT_BUILD_PATH: ${{ github.event.repository.name }}\\src
-      PROJECT_RELEASE_PATH: ${{ github.event.repository.name }}_dev_wasm
+      PROJECT_RELEASE_PATH: ${{ PROJECT_NAME }}_dev_wasm
       
     steps:
     - name: Checkout this repo
       uses: actions/checkout@master
       with:
-        path: ${{ env.PROJECT_NAME }}
+        path: ${{ env.REPOSITORY_NAME }}
       
     - name: Checkout raylib repo
       uses: actions/checkout@v4
@@ -56,12 +57,12 @@ jobs:
       run: |
         cd raylib/src
         emcc -v
-        make PLATFORM=PLATFORM_WEB RAYLIB_BUILD_MODE=RELEASE RAYLIB_LIBTYPE=STATIC EMSDK_PATH="D:/a/${{ env.PROJECT_NAME }}/${{ env.PROJECT_NAME }}/emsdk-cache/emsdk-main" RAYLIB_PROJECT_RELEASE_PATH=. -B
+        make PLATFORM=PLATFORM_WEB RAYLIB_BUILD_MODE=RELEASE RAYLIB_LIBTYPE=STATIC EMSDK_PATH="D:/a/${{ env.REPOSITORY_NAME }}/${{ env.REPOSITORY_NAME }}/emsdk-cache/emsdk-main" RAYLIB_PROJECT_RELEASE_PATH=. -B
 
     - name: Build Product
       run: |
-        cd ${{ env.PROJECT_NAME }}/src
-        make PLATFORM=PLATFORM_WEB BUILD_MODE=RELEASE EMSDK_PATH="D:/a/${{ env.PROJECT_NAME }}/${{ env.PROJECT_NAME }}/emsdk-cache/emsdk-main" PROJECT_BUILD_PATH=. RAYLIB_SRC_PATH=../../raylib/src -B
+        cd ${{ env.REPOSITORY_NAME }}/src
+        make PLATFORM=PLATFORM_WEB BUILD_MODE=RELEASE EMSDK_PATH="D:/a/${{ env.REPOSITORY_NAME }}/${{ env.REPOSITORY_NAME }}/emsdk-cache/emsdk-main" PROJECT_BUILD_PATH=. RAYLIB_SRC_PATH=../../raylib/src -B
   
     - name: Generate Artifacts
       run: |
@@ -70,8 +71,8 @@ jobs:
         copy /Y ${{ env.PROJECT_BUILD_PATH }}\${{ env.PROJECT_NAME }}.data ${{ env.PROJECT_RELEASE_PATH }}\${{ env.PROJECT_NAME }}.data
         copy /Y ${{ env.PROJECT_BUILD_PATH }}\${{ env.PROJECT_NAME }}.js ${{ env.PROJECT_RELEASE_PATH }}\${{ env.PROJECT_NAME }}.js
         copy /Y ${{ env.PROJECT_BUILD_PATH }}\${{ env.PROJECT_NAME }}.html ${{ env.PROJECT_RELEASE_PATH }}\index.html
-        copy /Y ${{ env.PROJECT_NAME }}\README.md ${{ env.PROJECT_RELEASE_PATH }}\README.md
-        copy /Y ${{ env.PROJECT_NAME }}\LICENSE ${{ env.PROJECT_RELEASE_PATH }}\LICENSE
+        copy /Y ${{ env.REPOSITORY_NAME }}\README.md ${{ env.PROJECT_RELEASE_PATH }}\README.md
+        copy /Y ${{ env.REPOSITORY_NAME }}\LICENSE ${{ env.PROJECT_RELEASE_PATH }}\LICENSE
         dir ${{ env.PROJECT_RELEASE_PATH }}
         7z a -tzip -r .\${{ env.PROJECT_RELEASE_PATH }}.zip .\${{ env.PROJECT_RELEASE_PATH }}\*
       shell: cmd
